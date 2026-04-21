@@ -200,7 +200,7 @@ inline uint lcm(const uint x, const uint y) { // least common multiple
 	return x*y==0u ? 0u : x*y/gcd(x, y);
 }
 inline uint percentage(const uint current, const uint max) {
-	return max>0u ? clamp((100u*current+max/2u)/max, 0u, 100u) : max_uint;
+	return current<max_uint&&max>0u&&max<max_uint ? clamp((100u*current+max/2u)/max, 0u, 100u) : (uint)max_uchar; // return [0,100] if valid, 255 if invalid
 }
 
 inline slong sq(const slong x) {
@@ -1079,8 +1079,12 @@ inline string create_file_extension(const string& filename, const string& extens
 }
 inline string read_file(const string& filename) {
 	std::ifstream file(filename, std::ios::in);
-	if(file.fail()) return "";
-	const string r((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+	string r = "";
+	if(!file.fail()) {
+		try {
+			r = string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+		} catch(...) {}
+	}
 	file.close();
 	return r;
 }

@@ -20,7 +20,7 @@ A minimal, cross-compatible CPU/GPU telemetry monitor with accurate data directl
 | fan [RPM]               | ❌❌/❌❌ |    🟨🟨/🟨🟨    | ✅✅/✅🟨  |   ✅🟨/🫠🟨    |
 | core clock [MHz]        |    🟨🟨/✅🟨  | ✅✅/✅✅ | ✅✅/✅✅ | ✅✅/✅✅ |
 | memory clock [MHz]      | ❌❌/❌❌ |    🫠🫠/🫠🫠    | ✅✅/✅✅ | ✅✅/🫠✅  |
-| PCIe bandwidth [MB/s]   |    🟨🟨/🟨🟨    | ✅✅/✅✅ | ❌❌/🫠✅  | ❎✅/❎🫠   |
+| PCIe bandwidth [MB/s]   |    🟨🟨/🟨🟨    | ✅✅/✅✅ | ❌❌/🫠✅  | ❎✅/❎❎ |
 
 | Legend | Description |
 | :----: | :---------- |

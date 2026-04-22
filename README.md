@@ -3,7 +3,7 @@
 A minimal, cross-compatible CPU/GPU telemetry monitor with accurate data directly from vendor APIs and beautiful ASCII visualization.
 
 `moritz@opencl-pc:~/hw-smi$ sudo bin/hw-smi --bars`
-<img src="https://github.com/user-attachments/assets/8b87cbe9-1023-4d0c-b3c5-63084ff60983" width="100%">
+<img src="https://github.com/user-attachments/assets/54f91091-a0d6-454d-8610-e415de88d796" width="100%">
 
 `moritz@opencl-pc:~/hw-smi$ sudo bin/hw-smi --graphs`
 <img src="https://github.com/user-attachments/assets/cf4c6716-e688-490d-923c-473b33f0a18d" width="100%">
@@ -36,7 +36,7 @@ A minimal, cross-compatible CPU/GPU telemetry monitor with accurate data directl
 - https://github.com/GPUOpen-LibrariesAndSDKs/ADLX/issues/27
 - https://github.com/ROCm/amdsmi/issues/182 / [183](https://github.com/ROCm/amdsmi/issues/183) / [188](https://github.com/ROCm/amdsmi/issues/188)
 - https://github.com/intel/drivers.gpu.control-library/issues/120 / [146](https://github.com/intel/drivers.gpu.control-library/issues/146) / [138](https://github.com/intel/drivers.gpu.control-library/issues/138) / [149](https://github.com/intel/drivers.gpu.control-library/issues/149)
-- https://github.com/oneapi-src/level-zero/issues/434 / [440](https://github.com/oneapi-src/level-zero/issues/440) / [441](https://github.com/oneapi-src/level-zero/issues/441)
+- https://github.com/oneapi-src/level-zero/issues/434 / [440](https://github.com/oneapi-src/level-zero/issues/440) / [441](https://github.com/oneapi-src/level-zero/issues/441) / [444](https://github.com/oneapi-src/level-zero/issues/444)
 
 </details>
 

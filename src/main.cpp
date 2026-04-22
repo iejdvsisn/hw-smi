@@ -1259,8 +1259,8 @@ void gpu_update_intel() {
 		const ulong zes_pcie_bandwidth_interval = zes_pci_stats.timestamp-zes_last_pci_timestamp[i];
 		zes_available_pci[i] = zes_available_pci[i]||zes_pci_stats.txCounter+zes_pci_stats.rxCounter>0ull; // harden against reading dropouts
 		gpus[g].pcie_bandwidth_current =  zes_available_pci[i] ? (zes_pcie_bandwidth_interval>0ull ? (uint)((zes_pci_stats.txCounter+zes_pci_stats.rxCounter-zes_last_pci[i]+zes_pcie_bandwidth_interval/2ull)/zes_pcie_bandwidth_interval) : gpus[g].pcie_bandwidth_current) : max_uint; // reuse last value if interval is 0
-		const uint gpu_pcie_link_width = zes_pci_stats.speed.width>0 ? zes_pci_stats.speed.width : zes_pci_state.speed.width>0 ? zes_pci_state.speed.width : zes_pci_properties.maxSpeed.width>0 ? zes_pci_properties.maxSpeed.width : 0u; // harden against broken counters
-		const uint gpu_pcie_link_gen = zes_pci_stats.speed.gen>0 ? zes_pci_stats.speed.gen : zes_pci_state.speed.gen>0 ? zes_pci_state.speed.gen : zes_pci_properties.maxSpeed.gen>0 ? zes_pci_properties.maxSpeed.gen : 0u; // harden against broken counters
+		const uint gpu_pcie_link_width = zes_pci_stats.speed.width>0 ? zes_pci_stats.speed.width : zes_pci_state.speed.width>0 ? zes_pci_state.speed.width : gpus[g].pcie_bandwidth_max==0u&&zes_pci_properties.maxSpeed.width>0 ? zes_pci_properties.maxSpeed.width : 0u; // harden against broken counters
+		const uint gpu_pcie_link_gen = zes_pci_stats.speed.gen>0 ? zes_pci_stats.speed.gen : zes_pci_state.speed.gen>0 ? zes_pci_state.speed.gen : gpus[g].pcie_bandwidth_max==0u&&zes_pci_properties.maxSpeed.gen>0 ? zes_pci_properties.maxSpeed.gen : 0u; // harden against broken counters
 		gpus[g].pcie_bandwidth_max = max(gpus[g].pcie_bandwidth_max, 246u*pow(2u, gpu_pcie_link_gen)*gpu_pcie_link_width); // harden against load-dependent reading
 		zes_last_pci[i] = zes_pci_stats.txCounter+zes_pci_stats.rxCounter;
 		zes_last_pci_timestamp[i] = zes_pci_stats.timestamp;

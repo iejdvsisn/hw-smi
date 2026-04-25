@@ -367,7 +367,7 @@ void cpu_finalize() {
 // not available: fan_max, memory_transfers_per_clock
 // broken: power_current (pre-Pascal), fan_current (pre-Pascal)
 // unreliable/estimate: fan_current
-#include "NVML/include/nvml.h" // for getting GPU usage
+#include "NVML/include/nvml.h" // https://github.com/NVIDIA/nvidia-settings/blob/main/src/nvml.h
 #pragma warning(disable:26812)
 uint nvml_gpu_start=0u, nvml_gpu_number=0u;
 vector<nvmlDevice_t> nvml_devices;
@@ -396,7 +396,6 @@ void gpu_initialize_nvidia() {
 		gpus[g].memory_transfers_per_clock = 8u; // no data available
 		gpus[g].memory_bandwidth_max = (gpu_memory_transfers_max_half*2u)*gpus[g].memory_bus_width/8u;
 		gpus[g].clock_memory_max = (gpu_memory_transfers_max_half*2u)/gpus[g].memory_transfers_per_clock;
-		gpus[g].fan_max = 5000u;
 	}
 }
 void gpu_update_nvidia() {
@@ -405,13 +404,15 @@ void gpu_update_nvidia() {
 		const nvmlDevice_t& nvml_device = nvml_devices[i];
 		nvmlUtilization_t nvml_utilization = {};
 		nvmlMemory_t nvml_memory = {};
-		uint gpu_temperature_current=0u, gpu_milliwatts_current=0u, gpu_milliwatts_total=0u, gpu_fan=0u, gpu_memory_transfers_current_half=0u, gpu_pcie_bandwidth_tx_kbps=0u, gpu_pcie_bandwidth_rx_kbps=0u, gpu_pcie_link_gen=0u, gpu_pcie_link_width=0u;
+		nvmlFanSpeedInfo_t nvml_fan = {};
+		uint gpu_temperature_current=0u, gpu_milliwatts_current=0u, gpu_milliwatts_total=0u, gpu_fan_percent=0u,gpu_memory_transfers_current_half=0u, gpu_pcie_bandwidth_tx_kbps=0u, gpu_pcie_bandwidth_rx_kbps=0u, gpu_pcie_link_gen=0u, gpu_pcie_link_width=0u;
 		nvmlDeviceGetUtilizationRates(nvml_device, &nvml_utilization);
 		nvmlDeviceGetMemoryInfo(nvml_device, &nvml_memory);
 		nvmlDeviceGetTemperature(nvml_device, NVML_TEMPERATURE_GPU, &gpu_temperature_current);
-		nvmlDeviceGetPowerUsage(nvml_device, &gpu_milliwatts_current);
+		const bool support_power = (NVML_SUCCESS==nvmlDeviceGetPowerUsage(nvml_device, &gpu_milliwatts_current));
 		nvmlDeviceGetEnforcedPowerLimit(nvml_device, &gpu_milliwatts_total);
-		nvmlDeviceGetFanSpeed(nvml_device, &gpu_fan); // in %
+		const bool support_fan_rpm = (NVML_SUCCESS==nvmlDeviceGetFanSpeedRPM(nvml_device, &nvml_fan)); // in RPM
+		const bool support_fan_percent = (NVML_SUCCESS==nvmlDeviceGetFanSpeed(nvml_device, &gpu_fan_percent)); // in %
 		nvmlDeviceGetClockInfo(nvml_device, NVML_CLOCK_SM, &gpus[g].clock_core_current);
 		nvmlDeviceGetClockInfo(nvml_device, NVML_CLOCK_MEM, &gpu_memory_transfers_current_half); // wrongly reports (MT/s / 2) instead of MHz
 		nvmlDeviceGetPcieThroughput(nvml_device, NVML_PCIE_UTIL_TX_BYTES, &gpu_pcie_bandwidth_tx_kbps); // transmit
@@ -424,9 +425,10 @@ void gpu_update_nvidia() {
 		gpus[g].memory_max = max(gpus[g].memory_max, (uint)((nvml_memory.total+524288ull)/1048576ull)); // harden against reading dropouts
 		gpus[g].temperature_current = gpu_temperature_current>0u ? gpu_temperature_current : gpus[g].temperature_current; // harden against reading dropouts
 		gpus[g].temperature_max = gpus[g].temperature_current>0u ? 100u : 0u; // make 0 if no data is available
-		gpus[g].power_current = (gpu_milliwatts_current+500u)/1000u;
+		gpus[g].power_current = support_power ? (gpu_milliwatts_current+500u)/1000u : max_uint;
 		gpus[g].power_max = gpu_milliwatts_total>0u ? (gpu_milliwatts_total+500u)/1000u : gpus[g].power_max; // harden against reading dropouts
-		gpus[g].fan_current = (gpus[g].fan_max*gpu_fan+50u)/100u; // +50u for correct rounding
+		gpus[g].fan_current = support_fan_rpm ? nvml_fan.speed : support_fan_percent ? (gpus[g].fan_max*gpu_fan_percent+50u)/100u : max_uint; // harden against broken counters
+		gpus[g].fan_max = support_fan_rpm||support_fan_percent ? 5000u : max_uint; // no data available
 		gpus[g].clock_memory_current = (gpu_memory_transfers_current_half*2u)/gpus[g].memory_transfers_per_clock;
 		const uint gpu_pcie_bandwidth_current = (gpu_pcie_bandwidth_tx_kbps+gpu_pcie_bandwidth_rx_kbps+512u)/1024u;
 		gpus[g].pcie_bandwidth_max = max(gpus[g].pcie_bandwidth_max, 246u*pow(2u, gpu_pcie_link_gen)*gpu_pcie_link_width); // harden against load-dependent reading

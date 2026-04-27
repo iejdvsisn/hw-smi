@@ -1571,7 +1571,7 @@ void print_data_graph(uint width, uint height) {
 		print_graph(x_gpu, y_graph, w_gpu, h_graph, graph_gpu_usage[g], gpu_color, 100u);
 		print_graph(x_gbw , y_graph, w_gbw , h_graph, graph_gpu_memory_bandwidth[g], gpu_color, 100u, " GB/s", (gpus[g].memory_bandwidth_current+500u)/1000u);
 		if(w_gpow>=12u&&gpus[g].temperature_current>0u) {
-			print_graph(x_gpow, y_graph, w_gpow, h_graph, graph_gpu_power[g], gpu_color, 100u, "'C "+alignr(3u, gpus[g].power_current)+" W", gpus[g].temperature_current);
+			print_graph(x_gpow, y_graph, w_gpow, h_graph, graph_gpu_power[g], gpu_color, 100u, "'C "+alignr(3u, gpus[g].power_current<max_uint ? gpus[g].power_current : 0u)+" W", gpus[g].temperature_current);
 		} else {
 			print_graph(x_gpow, y_graph, w_gpow, h_graph, graph_gpu_power[g], gpu_color, 100u, " W", gpus[g].power_current);
 		}
@@ -1778,7 +1778,7 @@ void main_graphics() {
 			draw_graph(x_gpu , y_graph, w_gpu+1u, h_graph, graph_gpu_usage[g], gpu_color, 4u, 100u);
 		}
 		draw_graph(x_gbw , y_graph, w_gbw+1u, h_graph, graph_gpu_memory_bandwidth[g], gpu_color, 4u, 100u, " GB/s", (gpus[g].memory_bandwidth_current+500u)/1000u);
-		draw_graph(x_gpow, y_graph, w_gpow  , h_graph, graph_gpu_power[g], gpu_color, 4u, 100u, "'C "+alignr(3u, gpus[g].power_current)+" W", gpus[g].temperature_current);
+		draw_graph(x_gpow, y_graph, w_gpow  , h_graph, graph_gpu_power[g], gpu_color, 4u, 100u, "'C "+alignr(3u, gpus[g].power_current<max_uint ? gpus[g].power_current : 0u)+" W", gpus[g].temperature_current);
 		draw_graph(x_gmem, y_graph, w_gmem  , h_graph, graph_gpu_memory[g], Color(220, 147,  12), 4u, 100u, " MB", gpus[g].memory_current);
 	}
 }

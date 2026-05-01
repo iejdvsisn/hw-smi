@@ -98,6 +98,7 @@ string clean_device_name(string name) {
 	name = replace(name, " 8GB Laptop GPU", "M 8GB");
 	name = replace(name, " Ti Laptop GPU", "M Ti");
 	name = replace(name, " Laptop GPU", "M");
+	name = replace(name, "  ", " ");
 	return trim(name);
 }
 
@@ -233,12 +234,12 @@ void cpu_initialize() { // initialize data
 		const vector<string> lines = split_regex(proc_cpuinfo, "\\s*\n\\s*");
 		for(uint i=0u; i<(uint)lines.size(); i++) {
 			const vector<string> values = split_regex(lines[i], "\\s*:\\s*");
-				if(values[0]=="model name") {
-					cpu.name = clean_device_name(values[1]);
-					if(contains(cpu.name, "Intel")) cpu.vendor = 'I';
-					if(contains(cpu.name, "AMD")) cpu.vendor = 'A';
-					break;
-				}
+			if(values[0]=="model name") {
+				cpu.name = clean_device_name(values[1]);
+				if(contains(cpu.name, "Intel")) cpu.vendor = 'I';
+				if(contains(cpu.name, "AMD")) cpu.vendor = 'A';
+				break;
+			}
 		}
 	} { // CPU, read /proc/stat
 		const string proc_stat = read_file("/proc/stat");

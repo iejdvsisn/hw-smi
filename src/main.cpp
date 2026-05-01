@@ -84,6 +84,7 @@ string clean_device_name(string name) {
 	name = replace_regex(name, "\\s+GPU \\(.*", "");
 	name = replace_regex(name, "\\s*\\(R\\)", "");
 	name = replace_regex(name, "\\s*\\(TM\\)", "");
+	name = replace_regex(name, "\\s+", " ");
 	name = replace(name, " CPU", "");
 	name = replace(name, " GPU", "");
 	name = replace(name, "0 Graphics", "0");
@@ -98,7 +99,6 @@ string clean_device_name(string name) {
 	name = replace(name, " 8GB Laptop GPU", "M 8GB");
 	name = replace(name, " Ti Laptop GPU", "M Ti");
 	name = replace(name, " Laptop GPU", "M");
-	name = replace(name, "  ", " ");
 	return trim(name);
 }
 

